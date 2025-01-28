@@ -12,7 +12,7 @@ public class GalleryService(Supabase.Client supabase,
 {
     private readonly string _userId = httpContextAccessor.HttpContext.Items["UserId"] as string;
 
-    public async Task<bool> UploadImage(byte[] imageContent)
+    public async Task<bool> UploadImage(byte[] imageContent, string imagePath, string imageName)
     {
         try
         {
@@ -23,16 +23,18 @@ public class GalleryService(Supabase.Client supabase,
                 await supabase.Storage.UpdateBucket(_userId, new BucketUpsertOptions { Public = true });
             }
 
-            var imagePath = Path.Combine("Assets", "fancy-avatar.png");
-
             var image = await supabase.Storage
               .From(_userId)
-              .Upload(imagePath, "fancy-avatar.png", new Supabase.Storage.FileOptions { CacheControl = "3600", Upsert = false });
+              .Upload(imagePath, imageName, new Supabase.Storage.FileOptions 
+              { 
+                  CacheControl = "3600",
+                  Upsert = false 
+              });
 
             var imageDetails = new ImageModel()
             {
                 Url = image,
-                Name = "",
+                Name = imageName,
                 Tags = ImageTags()
             };
 

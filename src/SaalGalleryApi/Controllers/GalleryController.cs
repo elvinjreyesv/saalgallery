@@ -16,8 +16,8 @@ namespace SaalGallery.Controllers
         public ActionResult Ping() => Ok("OK");
 
         [HttpPost("UploadImage")]
-        public async Task<ActionResult> UploadImage(byte[] imageContent)
-            => Ok(await galleryService.UploadImage(imageContent));
+        public async Task<ActionResult> UploadImage(byte[] imageContent, string imagePath, string imageName)
+            => Ok(await galleryService.UploadImage(imageContent, imagePath, imageName));
 
         [HttpDelete("DeleteAllImages")]
         public async Task<ActionResult> DeleteAllImages()
