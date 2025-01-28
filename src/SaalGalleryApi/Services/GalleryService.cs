@@ -104,7 +104,6 @@ public class GalleryService(Supabase.Client supabase,
                     Value = date
                 });
 
-            // Extract other possible characteristics from EXIF
             var cameraModel = exifDirectory.GetDescription(ExifDirectoryBase.TagModel);
             if (!string.IsNullOrEmpty(cameraModel))
                 tags.Add(new ImageTagModel
