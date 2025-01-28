@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="JWT" Version="11.0.0" />
+    <PackageReference Include="MetadataExtractor" Version="2.7.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NRedisStack" Version="0.13.1" />

@@ -1,4 +1,6 @@
-﻿using SaalGallery.Repository.Interfaces;
+﻿using MetadataExtractor.Formats.Exif;
+using MetadataExtractor;
+using SaalGallery.Repository.Interfaces;
 using SaalGallery.Services.Interfaces;
 using SaalGalleryApi.Models.Shared;
 using Supabase.Storage;
@@ -35,7 +37,7 @@ public class GalleryService(Supabase.Client supabase,
             {
                 Url = image,
                 Name = imageName,
-                Tags = ImageTags()
+                Tags = ImageTags(imageContent)
             };
 
             return await galleryRepository.SaveRedisImage(imageDetails, _userId);
@@ -86,8 +88,40 @@ public class GalleryService(Supabase.Client supabase,
     public async Task<List<ImageModel>> ListAllUserImages()
         => await galleryRepository.FetchRedisImages(_userId);
 
-    private static List<string> ImageTags()
+    private static List<ImageTagModel> ImageTags(byte[] imageContent)
     {
-        return new List<string>();
+        var tags = new List<ImageTagModel>();
+        var directories = ImageMetadataReader.ReadMetadata(new MemoryStream(imageContent));
+
+        var exifDirectory = directories.OfType<ExifDirectoryBase>().FirstOrDefault();
+        if (exifDirectory != null)
+        {
+            var date = exifDirectory.GetDescription(ExifDirectoryBase.TagDateTime);
+            if (!string.IsNullOrEmpty(date))
+                tags.Add(new ImageTagModel
+                {
+                    Name = "Date",
+                    Value = date
+                });
+
+            // Extract other possible characteristics from EXIF
+            var cameraModel = exifDirectory.GetDescription(ExifDirectoryBase.TagModel);
+            if (!string.IsNullOrEmpty(cameraModel))
+                tags.Add(new ImageTagModel
+                {
+                    Name = "Camera Model",
+                    Value = cameraModel
+                });
+
+            var cameraMake = exifDirectory.GetDescription(ExifDirectoryBase.TagMake);
+            if (!string.IsNullOrEmpty(cameraMake))
+                tags.Add(new ImageTagModel
+                {
+                    Name = "Camera Make",
+                    Value = cameraMake
+                });
+        }
+
+        return tags;
     }
 }
