@@ -7,6 +7,9 @@ using SaalGallery.Repository;
 using SaalGallery.Repository.Interfaces;
 using SaalGallery.Services;
 using SaalGallery.Services.Interfaces;
+using SaalGalleryApi.Models.Shared;
+using SaalGalleryApi.Services;
+using SaalGalleryApi.Services.Interfaces;
 using Scrutor;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -18,6 +21,7 @@ public static class CustomSettingsExtensions
     {
         services.Configure<OtelSettings>(configuration.GetSection("OtelSettings"));
         services.Configure<CustomAppSettings>(configuration.GetSection("CustomAppSettings"));
+        services.Configure<ExternalConnectionSettings>(configuration.GetSection("ExternalConnectionStrings"));
         return services;
     }
 
@@ -39,8 +43,8 @@ public static class CustomSettingsExtensions
                 {
                     ValidateLifetime = false,
                     ValidateIssuerSigningKey = false,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidIssuer = appSettings?.ValidIssuer,
                     ValidAudience = appSettings?.ValidAudience,
                     SignatureValidator = (token, parameters) =>
@@ -61,7 +65,10 @@ public static class CustomSettingsExtensions
 
         #region Services
         services.AddScoped<IGalleryService, GalleryService>();
+        services.AddScoped<IAccountService, AccountService>();
         #endregion
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         return services;
     }
