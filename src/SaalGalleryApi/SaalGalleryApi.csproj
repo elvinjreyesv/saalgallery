@@ -12,7 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NRedisStack" Version="0.13.1" />
-    <PackageReference Include="Scrutor" Version="6.0.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.24" />
     <PackageReference Include="Supabase" Version="1.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -20,10 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenTelemetryTool\OpenTelemetryTool.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mapper\Custom\" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetryTool.OpenTelemetryConfig;
-using SaalGallery.Mapper.Abstracts;
 using SaalGallery.Models.Shared;
 using SaalGallery.Repository;
 using SaalGallery.Repository.Interfaces;
@@ -10,7 +9,6 @@ using SaalGallery.Services.Interfaces;
 using SaalGalleryApi.Models.Shared;
 using SaalGalleryApi.Services;
 using SaalGalleryApi.Services.Interfaces;
-using Scrutor;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace SaalGallery.Utilities.Extensions;
@@ -69,25 +67,6 @@ public static class CustomSettingsExtensions
         #endregion
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-        return services;
-    }
-
-    public static IServiceCollection AddMappers(this IServiceCollection services)
-    {
-        services.Scan(scan => scan
-            .FromAssemblyOf<IMapper>()
-            .AddClasses(x => x.AssignableTo(typeof(BaseCustomMapper<,>)))
-            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
-            .AsSelf()
-            .WithTransientLifetime()
-
-            .AddClasses(x => x.AssignableTo(typeof(IMapper<,>)))
-            .AsMatchingInterface()
-            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
-            .AsSelfWithInterfaces()
-            .WithTransientLifetime()
-        );
 
         return services;
     }
